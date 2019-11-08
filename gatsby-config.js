@@ -9,6 +9,9 @@ module.exports = {
   },
   pathPrefix: userConfig.pathPrefix,
   plugins: [
+    `gatsby-plugin-react-helmet`,
+    `gatsby-plugin-material-ui`,
+    `gatsby-plugin-styled-components`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {
@@ -63,6 +66,5 @@ module.exports = {
       },
     },
     `gatsby-plugin-offline`,
-    `gatsby-plugin-react-helmet`,
-  ],
+  ]
 };
