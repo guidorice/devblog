@@ -8,6 +8,8 @@ featuredImage: "./featured.png"
 Development. My talk was titled _Visualizing Open Data: Serverless single page
 web app development using Mapbox, Netlify, React and TypeScript_.
 
+<!-- end -->
+
 screen capture:
 ![App](./featured.png)
 
