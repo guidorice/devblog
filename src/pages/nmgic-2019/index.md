@@ -17,7 +17,7 @@ I developed this web app specifically for the meeting, and my goals were:
 2. Visualize Open Data
 3. Simple enough that it could be explained in 30 minutes
 
-I was recalled a past [FOSS4G](http://foss4g.org/) conference I attended, when a
+I recalled a past [FOSS4G](http://foss4g.org/) conference I attended, when a
 presenter from a big company made the dubious claim that conference attendees do
 not want to learn anything, they just want to have a good laugh! With that in
 mind I added three slides to this talk that are breaks for "Internet Humor" aka
