@@ -1,3 +1,12 @@
+
+# Alex's devblog
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/eb79376d-82ec-4d97-a707-15a1955c2b51/deploy-status)](https://app.netlify.com/sites/admiring-snyder-8c2338/deploys)
+
+
+Original Readme follows:
+*******
+
 # DevBlog
 
 DevBlog is a fully customizable blog template designed for developers (or anyone else) wanting to get into blogging. It comes ready to go and deploy (with ease) or can be edited and extended however you like. The blog is completely statically generated via GatsbyJS, comes with syntax highlighting (via PrismJS) out of the box, and has server-side rendering built-in, among other things.
