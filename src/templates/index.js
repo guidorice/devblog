@@ -18,7 +18,7 @@ const IndexPage = ({ pageContext }) => {
     <Layout>
       <Container>
         <Helmet
-          title={`${userConfig.title} | ${userConfig.author}`}
+          title={`${userConfig.author} / ${userConfig.title}`}
           htmlAttributes={{ lang: 'en' }}
         >
           <meta
