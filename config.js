@@ -1,17 +1,16 @@
 module.exports = {
-  title: 'Dev Blog', // Required
-  author: 'Ryan Fitzgerald', // Required
-  description: 'Full-stack Web Developer',
-  primaryColor: '#3498db', // Required
+  title: 'Dev Blog',
+  author: 'Alex G Rice',
+  description: 'Dev Blog — full stack software engineer with passion for geography and GIS',
+  primaryColor: 'rgb(129, 199, 132)',
   showHeaderImage: true,
   showShareButtons: true,
-  postsPerPage: 5, // Required
+  postsPerPage: 5,
   social: {
-    website: 'https://ryanfitzgerald.ca',
-    github: 'https://github.com/ryanfitzgerald',
-    twitter: 'https://twitter.com/ryanafitzgerald',
-    linkedin: 'https://ca.linkedin.com/in/ryanafitzgerald',
+    website: 'https://ricegeo.dev',
+    github: 'https://github.com/guidorice',
+    linkedin: 'https://www.linkedin.com/in/guidorice',
   },
   pathPrefix: '/devblog',
-  siteUrl: 'https://ryanfitzgerald.github.io/devblog/',
+  siteUrl: 'https://ricegeo.dev/devblog/',
 };

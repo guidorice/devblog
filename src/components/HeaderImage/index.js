@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'gatsby-link';
 
 import Wrapper from './Wrapper';
-import imgSrc from '../../main.jpg';
+import imgSrc from '../../gravatar.png';
 
 function HeaderImage() {
   return (

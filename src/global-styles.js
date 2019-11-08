@@ -4,7 +4,7 @@ import styledNormalize from "styled-normalize";
 const GlobalStyle = createGlobalStyle`
   ${styledNormalize}
   
-  @import url("https://fonts.googleapis.com/css?family=Roboto:400,700");
+  @import url("https://fonts.googleapis.com/css?family=Alfa+Slab+One|Roboto|Material+Icons&display=swap");
   
   *,
   *:before,
@@ -21,7 +21,7 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     background: #f9fafc;
-    font-family: 'Open Sans', sans-serif; 
+    font-family: Roboto, 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.5;
     padding: 50px 0;
     -webkit-font-smoothing: antialiased;
@@ -48,7 +48,7 @@ const GlobalStyle = createGlobalStyle`
     background: rgba(245, 245, 245, 1);
     color: rgb(65, 76, 94);  }
 
-  @media only screen and (max-width: 870px) {
+  @media only screen and (max-width: 1024px) {
     .gatsby-highlight {
       margin: 15px -15px;
 

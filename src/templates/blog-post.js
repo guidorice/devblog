@@ -1,4 +1,4 @@
-import {graphql} from 'gatsby';
+import { graphql } from 'gatsby';
 import Helmet from 'react-helmet';
 import get from 'lodash/get';
 import React from 'react';
@@ -41,11 +41,11 @@ class BlogPostTemplate extends React.Component {
           </Helmet>
           <Card>
             <ArticleHeader>
-              {post.frontmatter.featuredImage && (
+              {/*  {post.frontmatter.featuredImage && (
                 <FeaturedImage
                   sizes={post.frontmatter.featuredImage.childImageSharp.sizes}
                 />
-              )}
+              )} */}
               <h1>{post.frontmatter.title}</h1>
               <p>{post.frontmatter.date}</p>
               <span />
