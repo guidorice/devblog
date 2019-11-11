@@ -8,7 +8,7 @@ featuredImage: "./featured.png"
 
 <!-- end -->
 
-[Skip to Benchmarks](#benchmark-results)
+[Skip to Benchmarks](#benchmarks)
 
 ## Background
 
@@ -22,9 +22,7 @@ million points and a thousand hex-bins. Using ESRI ArcMap, the spatial join took
 deliverable for that capstone project is a [PDF map, which you can download
 here](./Rice_A_Capstone.pdf).
 
-screen capture:
-
-![App](./capstone-geog486.png)
+![Cartography](./capstone-geog486.png)
 
 More recently working at [Descartes Labs](https://descarteslabs.com/) we were
 developing a JavaScript app for lightweight GIS analysis in browser. One of the
@@ -41,8 +39,8 @@ can be such a performance hit.
 
 Given a collection of Points, and a collection of Polygons (left), return the
 set of Points which are contained by the Polygons (right). It's something you
-can do visually without even really thinking, but computationally it is more
-complex than you might think.
+can do visually without even thinking, but computationally it is more complex
+than you might think.
 
 ## Ray Cast Algorithm
 
@@ -65,14 +63,12 @@ polygon against each point.
 
 ## Learning Rust is a Journey
 
-![Rust](./rust-logo-blk.svg)
-
-[Rust](https://www.rust-lang.org/) is a new programming language from
+![Rust](./rust-logo-blk.svg) [Rust](https://www.rust-lang.org/) is a new programming language from
 [Mozilla](https://www.mozilla.org). Rust 1.0 was released in 2015. The 2018
 edition of Rust focused on the developer experience and tooling. Rust is being
 used for everything from traditional systems programming, to microservices and
 network servers, embedded systems, distributed systems, and surprisingly, web
-app development too because if it's suitability to target
+app development too because of it's suitability to target
 [WebAssembly](https://webassembly.org/) (WASM).
 
 In the late 90's I attempted to learn C / C++ but never got very far with it,
@@ -119,8 +115,8 @@ I intend to show in this article that it is possible for a Rust beginner to:
 
 [Turf.js](http://turfjs.org/) is a popular open source package for geospatial
 analysis for browsers and Node.js. One of Turf's functions is
-[pointsWithinPolygon](http://turfjs.org/docs/#pointsWithinPolygon). The function
-signature is:
+[pointsWithinPolygon](http://turfjs.org/docs/#pointsWithinPolygon). Let's call
+that the reference implementation. The function signature is:
 
 ```typescript
 points (Feature|FeatureCollection <Point>) // Points as input search
@@ -128,7 +124,7 @@ polygon (FeatureCollection|Geometry|Feature<(Polygon|MultiPolygon)>) // Points m
 returns FeatureCollection<Point> //  points that land within at least one polygon
 ```
 
-For this exercise, I am simplifying that to:
+For this exercise, I simplified that to:
 
 ```typescript
 points (FeatureCollection<Point>)
@@ -136,7 +132,7 @@ polygons (FeatureCollection<(Polygon|MultiPolygon)>)
 returns FeatureCollection<Point>
 ```
 
-Translating from JavaScript to Rust, the `fn` signature is therefore:
+Translated from JavaScript to Rust, the `fn` signature is therefore:
 
 ```rust
 pub fn points_within_polygons(
@@ -164,15 +160,19 @@ Polygons and MultiPolygons.
 
 ## Pick a Data Set
 
-- Points dataset: I randomly generated 1,000 points in decimal degrees
-  and wrote them to a file as a GeoJson FeatureCollection. Here is a tiny Rust
-  program I wrote to do that: https://github.com/guidorice/random-geojson-points
+- Points dataset: I randomly generated sets of 10, 100 and 1,000 points in
+  decimal degrees and wrote them to files as a GeoJson FeatureCollection. [I
+  wrote a tiny Rust program to do that](
+  https://github.com/guidorice/random-geojson-points).
 
-- Polygons dataset: I chose the [Natural Earth](http://www.naturalearthdata.com/)
-datasets [`ne_110m_land` and `ne_10m_land`](https://www.naturalearthdata.com/downloads/110m-physical-vectors/). This was convenient because it comes with
-multiple levels of simplification. I chose the 1:110m and 1:10m for this exercise.
+- Polygons dataset: I chose the [Natural
+  Earth](http://www.naturalearthdata.com/) datasets [`ne_110m_land` and
+  `ne_10m_land`](https://www.naturalearthdata.com/downloads/110m-physical-vectors/).
+  This was convenient because it comes with multiple levels of simplification
+  and many people are familiar with it I chose the 1:110m and 1:10m for this
+  exercise. Recall the Visual Explanation above? Those polygons are the Natural
+  Earth land vector data:
 
-Recall the Visual Explanation above? Those polygons are the Natural Earth land vector data:
 
 ![Spatial Join](./featured.png)
 
@@ -181,10 +181,11 @@ Recall the Visual Explanation above? Those polygons are the Natural Earth land v
 Having identified the reference implementation (Turf.js's `pointsWithinPolygon`
 function) and our two inputs to the function, next I wrote a small TypeScript
 module to run in Node.js and call Turf.js and print out the results. I saved
-these to geojson files ton `tests/fixtures/natural-earth`. Now there are 6 test
-cases which we will benchmark against later. Simple and Complex polygons, and then 3 sizes of Point collections (10, 100 and 1,000).
+these to geojson files into `tests/fixtures/natural-earth/`. Now there are 6
+test cases which we will benchmark against later. Simple and Complex polygons,
+and 3 sizes of Point collections (10, 100 and 1,000).
 
-```
+```bash
 tests/fixtures/natural-earth
 ├── ne_10m_land.geojson
 ├── ne_10m_land_points10_result.geojson
@@ -204,17 +205,7 @@ Here is an excerpt of one of the unit tests in Rust. Notice the pattern match at
 the end:
 
 ```rust
-///! Test the natural-earth land results (ne_10m_land and ne_110m_land).
-///! Using the results generated by the Turf.js library itself.
-use geojson::GeoJson;
-use points_within_polygons::points_within_polygons;
-use std::fs;
-
-mod common;
-
-const FIXTURES_PATH: &str = "tests/fixtures/natural-earth/";
-const READ_FILE_FAIL_MSG: &str = "Unable to read file";
-
+// Excerpt of tests/natural_earth.rs
 #[test]
 fn natural_earth_test_complex_polygons() {
     let points_data = fs::read_to_string([FIXTURES_PATH, "points-10.geojson"].concat())
@@ -250,18 +241,19 @@ fn natural_earth_test_complex_polygons() {
 
 ## Rust Implementation
 
-⚠️ beginner grade, possibly not idiomatic Rust code follows. Of interest are the
-pattern matching, and converting between GeoJson types and Geo types. This was
-kind of a pain point learning how to translate into GeoRust's native types.
+Of interest is the pattern matching, and converting between GeoJson types and
+Geo types. It was a pain point learning how to translate into GeoRust's native
+types in and out of GeoJson. However, the heavy lifting of the function
+`contains()` was already implemented in GeoRust's `geo` crate, so the task was
+mostly translating between types, and enumerating through the
+`FeatureCollection`s.
 
 The complete source code is in Github, please see the [Links](#links) section.
 The section [Next Steps and Optimizations](#next-steps-and-optimizations) lists 
-some outstanding TODO items as well as ideas for optimizing this.
+some outstanding TODO items as well as ideas for optimizing this function.
 
 ```rust
-/// Return Option<FeatureCollection> having the Points which are contained
-/// within the given Polygon(s). The function signature is intended to be similar
-/// to http://turfjs.org/docs/#pointsWithinPolygon
+// Excerpt of src/lib.rs
 pub fn points_within_polygons(
   points_fc: geojson::FeatureCollection,
   polygons_fc: geojson::FeatureCollection,
@@ -302,16 +294,87 @@ pub fn points_within_polygons(
 }
 ```
 
+### WASM bindings
+
+Rust's wasm-bindgen and wasm-pack tools were easy to use and just worked.
+Here is what I came up with to expose the Rust function to JavaScript:
+
+```rust
+// Excerpt of wasm/src/lib.rs
+#[wasm_bindgen]
+pub fn points_within_polygons(points: JsValue, polygons: JsValue) -> JsValue {
+    utils::set_panic_hook();
+    let points_geojson: GeoJson = points.into_serde().unwrap();
+    let polygons_geojson: GeoJson = polygons.into_serde().unwrap();
+    let points_fc = feature_collection(points_geojson);
+    let polygons_fc = feature_collection(polygons_geojson);
+    let opt_feature_collection = lib_points_within_polygons(points_fc, polygons_fc);
+    match opt_feature_collection {
+        Some(feature_collection) => JsValue::from_serde(&feature_collection).unwrap(),
+        None => JsValue::from_bool(false),
+    }
+}
+```
+<div id="benchmarks"></div>
 
 ## Benchmark Results
 
-## Next Steps and Optimizations
+More operations per second (ops/sec) is better!
+
+![Benchmark](./benchmark-simple-polygons.svg)
+
+![Benchmark](./benchmark-complex-polygons.svg)
+
+## Discussion
+
+Two interesting observations:
+
+1. Rust WASM is faster in 5/6 of the benchmarks.
+
+2. Rust WASM function exhibits greater performance, relative to Turf.js, the
+   more points it's tasked with. Notice the Y-Axis is Log Scale, and the red and
+   blue lines are diverging, not parallel, as the number of points increases.
+
+3. Turf.js was faster for one out of the six benchmarkes: 10 points and Complex
+   polygons. I have a theory (untested) that is because of the cost of
+   serializing the GeoJson to send it to the WASM module. WASM only knows about
+   numbers and byte arrays. Everything else has to be serialized. In fact, for
+   each function call, there are 6 geojson serialization steps!
+
+## Serialize All The Things (tm)
+
+![Flowchart](./serialize-all-the-things.png)
+
+As suggested above in the discussion, some use cases might not see any
+performance gains with WASM if the cost of serialization is greater than the
+benefits gained by doing the computation in WASM.
+
+That said, WASM brings other benefits such as consistent performance, no garbage
+collection hiccups, and a fast-loading binary format. Rust of course brings it's
+type safety and other benefits.
+
+## Next Steps and Future Optimizations
+
+<div id="next-steps-and-optimizations"></div>
 
 ## Links
 
+<div id="links"></div>
 
+https://github.com/guidorice/points-within-polygons
 
+https://github.com/guidorice/random-geojson-points
 
+https://www.rust-lang.org/
 
+https://github.com/georust
 
+https://rustwasm.github.io/wasm-pack/
 
+https://rustwasm.github.io/docs/book/
+
+http://www.naturalearthdata.com/
+
+http://turfjs.org/
+
+https://webassembly.org/
