@@ -39,7 +39,7 @@ can be such a performance hit.
 ![Spatial Join](./featured.png)
 
 Given a collection of Points, and a collection of Polygons (left), return the
-set of Points which are contained by the Polygons (right). It's something you
+set of Points which are contained by the Polygons (right). It is something you
 can do visually without even thinking, but computationally it is more complex
 than you might think.
 
@@ -69,7 +69,7 @@ programming language from [Mozilla](https://www.mozilla.org). Rust 1.0 was
 released in 2015. The 2018 edition of Rust focused on the developer experience
 and tooling. Rust is being used for everything: traditional systems programming,
 microservices, databases, network servers, embedded devices, distributed
-systems, and surprisingly, web app development too because of it's suitability
+systems, and surprisingly, web app development too because of its suitability
 to target [WebAssembly](https://webassembly.org/) (WASM).
 
 In the late 90's I attempted to learn C / C++ but never got very far with it,
@@ -78,7 +78,7 @@ experienced crashing and memory corruption I sought out safer
 alternatives like Java, C#, and Python.
 
 But today Rust *claims* to offer something pretty appealing: Performance,
-Reliability and Productivity. It's borrow checking compiler and lifetimes
+Reliability and Productivity. Its borrow checking compiler and lifetimes
 annotation syntax is new and innovative. It also takes ideas from other modern
 languages, such as OCaml, F#, and Haskell (the ML language family) as well as
 C++.
@@ -88,7 +88,7 @@ and done some coding exercises, so I decided this would be a good first project:
 
 1. Implement a points-in-polygons (PIP) spatial join in Rust.
 2. Compile it to WASM.
-3. Benchmark it's performance compared with a popular JavaScript library.
+3. Benchmark its performance compared with a popular JavaScript library.
 
 ## Dancing With The Borrow Checker
 
@@ -373,7 +373,7 @@ Test System: Node.js v12.13 - OS X - 2.6 GHz Intel Core i5
 1. Rust WASM is faster in 5/6 of the benchmarks.
 
 2. Rust WASM exhibits greater performance, relative to Turf.js, the
-   more points it's tasked with. Notice the Y-Axis is Log Scale, and the red and
+   more points its tasked with. Notice the Y-Axis is Log Scale, and the red and
    blue lines are diverging, not parallel, as the number of points increases.
 
 3. Turf.js was faster for one out of the six benchmarks: 10 points and Complex
@@ -394,7 +394,7 @@ benefits gained by doing the computation in WASM.
 
 That said, WASM brings [other benefits](https://webassembly.org/) such as
 predictable behavior, no garbage collection hiccups, and a fast-loading binary
-format. Rust of course brings it's type safety and other developer benefits.
+format. Rust of course brings its type safety and other developer benefits.
 
 <div id="next-steps-and-optimizations"></div>
 
@@ -405,7 +405,7 @@ format. Rust of course brings it's type safety and other developer benefits.
 GeoJson Features have an optional `bbox` property. The Turf.js function checks
 for that and does an early-out optimization if a point is not within the bbox of
 a polygon. In my Rust implementation I did not do that, yet. This does not
-effect the benchmarks shown above because the reference polygon dataset does not
+affect the benchmarks shown above because the reference polygon dataset does not
 include bounding boxes. Checking for the bounding rectangle in the Rust
 `points_within_polygons()` seems to be a necessary next step to make it a
 drop-in replacement for the Turf.js function.
@@ -421,7 +421,7 @@ This bubbled up to my function signature. This is apparently not unheard of in
 Rust, and it seems to me that it violates the dependency inversion principle
 (abstractions should not depend on details). It may just be a fact of life in
 the Rust borrow checker's world. In any case, I want to rewrite my function so
-it's signature takes just references. There may need to be lifetime annotations
+its signature takes just references. There may need to be lifetime annotations
 added as well...
 
   ```rust
@@ -458,7 +458,7 @@ compute capabilities that would fit this use case in the browser.
 
 ## Thanks
 
-One of Rust's strengths is it's
+One of Rust's strengths is its
 [Community](https://www.rust-lang.org/community). I have felt welcomed on the
 Users Forum, GitHub and Discord chat. The developer experience is a big part of
 what defines Rust. Cheers to the [GeoRust](https://github.com/georust)
