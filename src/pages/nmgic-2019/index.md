@@ -10,12 +10,11 @@ web app development using Mapbox, Netlify, React and TypeScript_.
 
 <!-- end -->
 
-screen capture:
 ![App](./featured.png)
 
 I developed this web app specifically for the meeting, and my goals were:
 
-1. Something complex enough to be interesting
+1. Something geospatial related and complex enough to be interesting
 2. Visualize Open Data
 3. Simple enough that it could be explained in 30 minutes
 

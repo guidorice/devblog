@@ -392,9 +392,9 @@ As suggested above in the discussion some use cases might not see any
 performance gains with WASM if the cost of serialization is greater than the
 benefits gained by doing the computation in WASM.
 
-That said, WASM brings other benefits such as consistent performance, no garbage
-collection hiccups, and a fast-loading binary format. Rust of course brings it's
-type safety and other benefits.
+That said, WASM brings [other benefits](https://webassembly.org/) such as
+predictable behavior, no garbage collection hiccups, and a fast-loading binary
+format. Rust of course brings it's type safety and other developer benefits.
 
 <div id="next-steps-and-optimizations"></div>
 
@@ -447,6 +447,15 @@ for an r*-tree spatial index. I hope to learn from @stuartlynn's code and see if
 the `rstar` crate can be used in my function and then see how it effects the
 benchmarks.
 
+### Parallelize Using WebWorkers and/or GPU
+
+The Point-in-Polygon (PIP) test is suitable for parallelization on GPU or on WebWorker. 
+This is one of several publications about it:
+[Speeding up Large-Scale Point-in-Polygon Test Based Spatial Join on GPUs](https://www-cs.ccny.cuny.edu/~jzhang/papers/pipsp_tr.pdf).
+
+The upcoming [WebGPU](https://webgpu.io/) standard may offer general purpose GPU
+compute capabilities that would fit this use case in the browser.
+
 ## Thanks
 
 One of Rust's strengths is it's
@@ -478,3 +487,5 @@ http://www.naturalearthdata.com/
 http://turfjs.org/
 
 https://webassembly.org/
+
+https://www-cs.ccny.cuny.edu/~jzhang/papers/pipsp_tr.pdf
