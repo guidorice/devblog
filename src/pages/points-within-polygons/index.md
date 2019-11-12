@@ -4,7 +4,7 @@ date: "2019-11-12"
 featuredImage: "./featured.png"
 ---
 
-🌵A tour of GIS Spatial Joins, Rust language development, and WebAssembly.
+A tour of GIS Spatial Joins, Rust language development, and WebAssembly.
 
 <!-- end -->
 
@@ -13,8 +13,8 @@ featuredImage: "./featured.png"
 ## Background
 
 I first encountered a very slow spatial join while working on the final project
-for my GIS graduate certificate from
-[PennState](https://gis.e-education.psu.edu/home). The class was GEOG486:
+for my Geographic Information Systems graduate certificate from
+[Penn State](https://gis.e-education.psu.edu/home). The class was GEOG486:
 Cartography and Visualization. I was creating a map of all the lightning strikes
 in New Mexico over a 12 year period, aggregated into hex-bins. That's about 10
 million points and a thousand hex-bins. Using [ESRI
@@ -27,9 +27,9 @@ here](./Rice_A_Capstone.pdf).
 
 More recently working at [Descartes Labs](https://descarteslabs.com/) we were
 developing a JavaScript app for lightweight GIS analysis in browser. One of the
-features was a points-in-polygons (PIP) join. It worked fine, but when the
-Product Manager tried a data file with complex polygon geometries, the app
-grinded to a halt for several minutes. Very slow spatial join strikes again! 👻
+features was a points-in-polygons (PIP) join. It worked fine, but when we tried
+a data file with complex polygon geometries, the app grinded to a halt for
+several minutes. Very slow spatial join strikes again! 👻
 
 Let us dig into this particular type of "contains" spatial join and see why it
 can be such a performance hit.
@@ -75,13 +75,9 @@ to target [WebAssembly](https://webassembly.org/) (WASM).
 In the late 90's I attempted to learn C / C++ but never got very far with it,
 because I did not have the determination and patience. Simply put, once I
 experienced crashing and memory corruption I sought out safer
-alternatives. I had better luck with Objective-C and it's automatic reference
-counting, but even there it was not hard to produce crashing bugs. Instead I
-found comfort in Java with it's garbage collected memory management, had some
-success with C# as well, plus a variety of scripting languages such as Perl and
-Python.
+alternatives like Java, C#, and Python.
 
-But today Rust *claims* to bring something entirely new: Performance,
+But today Rust *claims* to offer something pretty appealing: Performance,
 Reliability and Productivity. It's borrow checking compiler and lifetimes
 annotation syntax is new and innovative. It also takes ideas from other modern
 languages, such as OCaml, F#, and Haskell (the ML language family) as well as
@@ -96,17 +92,17 @@ and done some coding exercises, so I decided this would be a good first project:
 
 ## Dancing With The Borrow Checker
 
-Rust has a significant learning curve. In my experience though, it is not as
-tough as C / C++. The beauty of the Rust developer experience is in how the
-compiler (rustc), package manager (cargo), and linter (clippy) all combine to
-make a consistent environment that is always pushing you forward and helping you
-write better code. It is really a joy to use. Yes, sometimes you have to
-"battle" (I prefer to think of it as "dance") with the borrow checker and solve
-puzzles about ownership vs references. Sometimes it is maddening. But in the
-end, once something compiles, you will have a great degree of confidence that
-your code is going to do exactly what you expect it to, and do it efficiently.
+Rust has a significant learning curve. In my opinion though it is not as tough
+as C / C++. The beauty of the Rust developer experience is how the compiler
+(rustc), package manager (cargo), and linter (clippy) all combine to make a
+consistent environment that is always pushing you forward and helping you write
+better code. It is really a joy to use. Yes, sometimes you have to "battle" (I
+prefer to think of it as "dance") with the borrow checker and solve puzzles
+about ownership vs references. Sometimes it is maddening. But in the end, once
+something compiles, you will have a great degree of confidence that your code is
+going to do exactly what you expect it to, and do it efficiently.
 
-I intend to show in this article that it is possible for a Rust beginner to:
+I intend to show in this article that it is feasible for a Rust beginner to:
 
 - Create something that compiles and runs reliably
 - Has unit tests
@@ -116,7 +112,7 @@ I intend to show in this article that it is possible for a Rust beginner to:
 
 [Turf.js](http://turfjs.org/) is a popular open source package for geospatial
 analysis for browsers and Node.js. One of Turf's functions is
-[pointsWithinPolygon](http://turfjs.org/docs/#pointsWithinPolygon). Let's call
+[pointsWithinPolygon](http://turfjs.org/docs/#pointsWithinPolygon). Let us call
 that the reference implementation. The function signature is, according to
 Turf's docs:
 
@@ -203,9 +199,6 @@ tests/fixtures/natural-earth
 └── README.txt
 ```
 
-
-⚠️ Warning: beginner grade, maybe not idiomatic Rust code follows!
-
 Here is an excerpt of one of the unit tests in Rust. Notice the pattern match at
 the end:
 
@@ -247,17 +240,16 @@ fn natural_earth_test_complex_polygons() {
 ## Rust Implementation
 
 Of interest is the pattern matching, and converting between GeoJson types and
-Geo types. It was a pain point learning how to translate into [GeoRust](https://docs.rs/geojson/latest/geojson/) native
-types in and out of GeoJson. However, the heavy lifting of the function
-`contains()` was already implemented in [GeoRust](https://docs.rs/geojson/latest/geojson/) `geo` crate, so the task was
-mostly translating between types, and enumerating through the
+Geo types. It was a pain point learning how to translate into
+[GeoRust](https://docs.rs/geojson/latest/geojson/) native types in and out of
+GeoJson. However, the heavy lifting of the function `contains()` was already
+implemented in [GeoRust](https://docs.rs/geojson/latest/geojson/) `geo` crate,
+so the task was mostly translating between types, and enumerating through the
 `FeatureCollection`s.
 
 The complete source code is in Github, please see the [Links](#links) section.
 The section [Next Steps and Optimizations](#next-steps-and-optimizations) lists 
 some outstanding TODO items as well as ideas for optimizing this function.
-
-⚠️ Warning: beginner grade, maybe not idiomatic Rust code follows!
 
 ```rust
 // Excerpt of src/lib.rs
@@ -304,9 +296,7 @@ pub fn points_within_polygons(
 ### WASM bindings
 
 Rust's wasm-bindgen and wasm-pack tools were easy to use and they just worked.
-Here is what I came up with to expose the Rust function to JavaScript:
-
-⚠️ Warning: beginner grade, maybe not idiomatic Rust code follows!
+Here is is the Rust function binding my Rust library to JavaScript:
 
 ```rust
 // Excerpt of wasm/src/lib.rs
@@ -325,31 +315,74 @@ pub fn points_within_polygons(points: JsValue, polygons: JsValue) -> JsValue {
 }
 ```
 
+## Benchmark module in TypeScript
+
+```typescript
+// Excerpt of js/benchmark.ts
+import * as benchmark from 'benchmark';
+import { pointsWithinPolygon } from '@turf/turf';
+import { readFileSync } from 'fs';
+import { points_within_polygons as wasmPointsWithinPolygons } from 'points-within-polygons-wasm';
+
+const suite = new benchmark.Suite;
+const pointsFeatureCollection_10 = JSON.parse(readFileSync('./fixtures/natural-earth/points-10.geojson').toString());
+const pointsFeatureCollection_100 = JSON.parse(readFileSync('./fixtures/natural-earth/points-100.geojson').toString());
+const pointsFeatureCollection_1000 = JSON.parse(readFileSync('./fixtures/natural-earth/points-1000.geojson').toString());
+
+const simplePolygonsFeatureCollection = JSON.parse(readFileSync('./fixtures/natural-earth/ne_110m_land.geojson').toString());
+const complexPolygonsFeatureCollection = JSON.parse(readFileSync('./fixtures/natural-earth/ne_10m_land.geojson').toString());
+
+const turfMsg = 'turf.js/pointsWithinPolygon on';
+const wasmMsg = 'rust-wasm pointsWithinPolgons on';
+
+suite
+    .add(`${turfMsg} simple polygons x 10 points`, () => {
+        pointsWithinPolygon(pointsFeatureCollection_10, simplePolygonsFeatureCollection);
+    })
+    .add(`${wasmMsg} simple polygons x 10 points`, () => {
+        wasmPointsWithinPolygons(pointsFeatureCollection_10, simplePolygonsFeatureCollection);
+    })
+    // ... all the other combinations
+    .add(`${turfMsg} complex polygons x 1000 points`, () => {
+        pointsWithinPolygon(pointsFeatureCollection_1000, complexPolygonsFeatureCollection);
+    })
+    .add(`${wasmMsg} complex polygons x 1000 points`, () => {
+        wasmPointsWithinPolygons(pointsFeatureCollection_1000, complexPolygonsFeatureCollection);
+    })
+    .on('cycle', function (event) {
+        console.log(String(event.target));
+    })
+    .run();
+```
+
 <div id="benchmarks"></div>
 
 ## Benchmark Results
 
-More operations per second (ops/sec) is better!
+More operations per second (ops/sec) is better! Each operation is one function
+call to perform a spatial join.
 
-![Benchmark](./benchmark-simple-polygons.svg)
+![Benchmark1](./benchmark-simple-polygons.svg)
 
-![Benchmark](./benchmark-complex-polygons.svg)
+![Benchmark2](./benchmark-complex-polygons.svg)
 
-## Discussion
+Test System: Node.js v12.13 - OS X - 2.6 GHz Intel Core i5
 
-Two interesting observations:
+## Observations
 
 1. Rust WASM is faster in 5/6 of the benchmarks.
 
-2. Rust WASM function exhibits greater performance, relative to Turf.js, the
+2. Rust WASM exhibits greater performance, relative to Turf.js, the
    more points it's tasked with. Notice the Y-Axis is Log Scale, and the red and
    blue lines are diverging, not parallel, as the number of points increases.
 
 3. Turf.js was faster for one out of the six benchmarks: 10 points and Complex
    polygons. I have a theory (untested) that is because of the cost of
-   serializing the GeoJson to send it to the WASM module. WASM only knows about
-   numbers and byte arrays. Everything else has to be serialized. In fact, for
-   each function call, there are 6 geojson serialization/de-serialization steps!
+   serializing the GeoJson to send it to the WASM module. WASM's native types
+   consist of just integers and float numbers. I believe byte arrays can also be
+   efficiently transferred across the WASM boundary. Everything else has to be
+   serialized. In fact, for each `points_in_polygons` function call, there are 6
+   geojson serialization/de-serialization steps!
 
 ## Serialize All The Things
 
@@ -363,31 +396,33 @@ That said, WASM brings other benefits such as consistent performance, no garbage
 collection hiccups, and a fast-loading binary format. Rust of course brings it's
 type safety and other benefits.
 
-## Next Steps and Future Optimizations
-
 <div id="next-steps-and-optimizations"></div>
 
-### Bounding Box checking
+## Next Steps and Future Optimizations
+
+### Bounding Box Checking
 
 GeoJson Features have an optional `bbox` property. The Turf.js function checks
 for that and does an early-out optimization if a point is not within the bbox of
-a polygon. In my Rust implementation I did not do that. This does not effect the
-benchmarks shown above because the reference polygon dataset does not include
-bounding boxes. Checking for the bounding rectangle in the Rust
+a polygon. In my Rust implementation I did not do that, yet. This does not
+effect the benchmarks shown above because the reference polygon dataset does not
+include bounding boxes. Checking for the bounding rectangle in the Rust
 `points_within_polygons()` seems to be a necessary next step to make it a
 drop-in replacement for the Turf.js function.
 
 ### API Design
 
 My Rust function "asks for more ownership than it needs". That terminology came
-from Matt Brubeck (@mbrubeck) on the [Rust Users Forum](https://users.rust-lang.org).
-That is, it takes ownership of the `points` and `polygons` parameters. This is
-in large part because of some of the 3rd party functions I used, e.g. the
-`geo_geojson` crate also ask to take ownership. This bubbled up to my function
-signature. This seems to be a common thing in Rust, and it seems like it
-violates the dependency inversion principle (abstractions should not depend on
-details). In any case, I want to rewrite my function so it's signature takes
-just references. There may need to be lifetime annotations added as well...
+from Matt Brubeck (@mbrubeck) on the [Rust Users
+Forum](https://users.rust-lang.org). That is, it takes ownership of the `points`
+and `polygons` parameters. This is in large part because of some of the 3rd
+party functions I used, e.g. the `geo_geojson` crate also ask to take ownership.
+This bubbled up to my function signature. This is apparently not unheard of in
+Rust, and it seems to me that it violates the dependency inversion principle
+(abstractions should not depend on details). It may just be a fact of life in
+the Rust borrow checker's world. In any case, I want to rewrite my function so
+it's signature takes just references. There may need to be lifetime annotations
+added as well...
 
   ```rust
   // Improved fn signature?
@@ -404,14 +439,13 @@ that useful. Typically in a GIS workflow one will want to *aggregate* the points
 into buckets aka bins. This is commonly seen as a [Choropleth
 Map](https://doc.arcgis.com/en/insights/create/choropleth-maps.htm).
 
-Stuart Lynn (@stuartlynn) co-incidentally [is working on a similar project
-using Rust and WASM](https://github.com/stuartlynn/wasm_geo_agg). It takes
-points as CSV and aggregates them into GeoJson polygons. It has a nice UI
-visualization, and he used the [rstar](https://crates.io/crates/rstar) crate for
-an r*-tree spatial index.
-
-I hope to learn from @stuartlynn's code and see if the `rstar` create can be
-used in my function and then see how it effects the benchmarks.
+Stuart Lynn (@stuartlynn) co-incidentally [is working on a similar project using
+Rust and WASM](https://github.com/stuartlynn/wasm_geo_agg). It takes points as
+CSV and aggregates them into GeoJson polygons. It has a cool user
+interface/demo, and he used the [rstar](https://crates.io/crates/rstar) crate
+for an r*-tree spatial index. I hope to learn from @stuartlynn's code and see if
+the `rstar` crate can be used in my function and then see how it effects the
+benchmarks.
 
 ## Thanks
 
@@ -421,9 +455,9 @@ Users Forum, GitHub and Discord chat. The developer experience is a big part of
 what defines Rust. Cheers to the [GeoRust](https://github.com/georust)
 developers, and the individuals I mentioned above.
 
-## Links
-
 <div id="links"></div>
+
+## Links
 
 https://github.com/guidorice/points-within-polygons
 
