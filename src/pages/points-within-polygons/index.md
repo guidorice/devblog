@@ -1,6 +1,6 @@
 ---
 title: "A points in polygons spatial join for Rust and WebAssembly"
-date: "2019-11-11"
+date: "2019-11-12"
 featuredImage: "./featured.png"
 ---
 
@@ -17,8 +17,9 @@ for my GIS graduate certificate from
 [PennState](https://gis.e-education.psu.edu/home). The class was GEOG486:
 Cartography and Visualization. I was creating a map of all the lightning strikes
 in New Mexico over a 12 year period, aggregated into hex-bins. That's about 10
-million points and a thousand hex-bins. Using ESRI ArcMap, the spatial join took
-~45 minutes on desktop workstation. I thought "Wow! Why is that so slow?" My
+million points and a thousand hex-bins. Using [ESRI
+ArcMap](https://desktop.arcgis.com/en/arcmap/), the spatial join took ~45
+minutes on desktop workstation. I thought "Wow! Why is that so slow?" My
 deliverable for that capstone project is a [PDF map, which you can download
 here](./Rice_A_Capstone.pdf).
 
@@ -63,35 +64,35 @@ polygon against each point.
 
 ## Learning Rust is a Journey
 
-![Rust](./rust-logo-blk.svg) [Rust](https://www.rust-lang.org/) is a new programming language from
-[Mozilla](https://www.mozilla.org). Rust 1.0 was released in 2015. The 2018
-edition of Rust focused on the developer experience and tooling. Rust is being
-used for everything from traditional systems programming, to microservices and
-network servers, embedded systems, distributed systems, and surprisingly, web
-app development too because of it's suitability to target
-[WebAssembly](https://webassembly.org/) (WASM).
+![Rust](./rust-logo-blk.svg) [Rust](https://www.rust-lang.org/) is a new
+programming language from [Mozilla](https://www.mozilla.org). Rust 1.0 was
+released in 2015. The 2018 edition of Rust focused on the developer experience
+and tooling. Rust is being used for everything: traditional systems programming,
+microservices, databases, network servers, embedded devices, distributed
+systems, and surprisingly, web app development too because of it's suitability
+to target [WebAssembly](https://webassembly.org/) (WASM).
 
 In the late 90's I attempted to learn C / C++ but never got very far with it,
 because I did not have the determination and patience. Simply put, once I
-experienced crashing and memory corruption and started to reach for safer
+experienced crashing and memory corruption I sought out safer
 alternatives. I had better luck with Objective-C and it's automatic reference
 counting, but even there it was not hard to produce crashing bugs. Instead I
 found comfort in Java with it's garbage collected memory management, had some
 success with C# as well, plus a variety of scripting languages such as Perl and
 Python.
 
-But today Rust *claims* to brings something entirely new: Performance,
+But today Rust *claims* to bring something entirely new: Performance,
 Reliability and Productivity. It's borrow checking compiler and lifetimes
-annotation is, I believe, something disruptive and innovative. It also takes
-ideas from other modern languages, such as OCaml, F#, and Haskell (the ML
-language family) as well as C++.
+annotation syntax is new and innovative. It also takes ideas from other modern
+languages, such as OCaml, F#, and Haskell (the ML language family) as well as
+C++.
 
-I wanted to try out these lofty claims for myself. I have read some Rust books,
+I wanted to try out these claims for myself. I have read some Rust books,
 and done some coding exercises, so I decided this would be a good first project:
 
-1. Implement a points-in-polygons (PIP) spatial join in Rust
-2. Compile it to WASM
-3. Benchmark it's performance compared with a popular JavaScript library
+1. Implement a points-in-polygons (PIP) spatial join in Rust.
+2. Compile it to WASM.
+3. Benchmark it's performance compared with a popular JavaScript library.
 
 ## Dancing With The Borrow Checker
 
@@ -99,11 +100,11 @@ Rust has a significant learning curve. In my experience though, it is not as
 tough as C / C++. The beauty of the Rust developer experience is in how the
 compiler (rustc), package manager (cargo), and linter (clippy) all combine to
 make a consistent environment that is always pushing you forward and helping you
-write better code. It is really a joy to use. Yes, sometimes you have to battle
-(I prefer to think of it as "dance") with the borrow checker and solve puzzles
-about ownership vs references. Sometimes it is maddening. But in the end, once
-something compiles, you will have a great degree of confidence that it is going
-to do exactly what you expect it to, and do it efficiently.
+write better code. It is really a joy to use. Yes, sometimes you have to
+"battle" (I prefer to think of it as "dance") with the borrow checker and solve
+puzzles about ownership vs references. Sometimes it is maddening. But in the
+end, once something compiles, you will have a great degree of confidence that
+your code is going to do exactly what you expect it to, and do it efficiently.
 
 I intend to show in this article that it is possible for a Rust beginner to:
 
@@ -116,7 +117,8 @@ I intend to show in this article that it is possible for a Rust beginner to:
 [Turf.js](http://turfjs.org/) is a popular open source package for geospatial
 analysis for browsers and Node.js. One of Turf's functions is
 [pointsWithinPolygon](http://turfjs.org/docs/#pointsWithinPolygon). Let's call
-that the reference implementation. The function signature is:
+that the reference implementation. The function signature is, according to
+Turf's docs:
 
 ```typescript
 points (Feature|FeatureCollection <Point>) // Points as input search
@@ -132,7 +134,7 @@ polygons (FeatureCollection<(Polygon|MultiPolygon)>)
 returns FeatureCollection<Point>
 ```
 
-Translated from JavaScript to Rust, the `fn` signature is therefore:
+Translated from JavaScript to Rust, the function signature is therefore:
 
 ```rust
 pub fn points_within_polygons(
@@ -169,9 +171,9 @@ Polygons and MultiPolygons.
   Earth](http://www.naturalearthdata.com/) datasets [`ne_110m_land` and
   `ne_10m_land`](https://www.naturalearthdata.com/downloads/110m-physical-vectors/).
   This was convenient because it comes with multiple levels of simplification
-  and many people are familiar with it I chose the 1:110m and 1:10m for this
-  exercise. Recall the Visual Explanation above? Those polygons are the Natural
-  Earth land vector data:
+  and many people are familiar with this reference data. I chose the 1:110m and
+  1:10m for this exercise. Recall the Visual Explanation above? Those polygons
+  are the Natural Earth land vector data:
 
 
 ![Spatial Join](./featured.png)
@@ -200,6 +202,9 @@ tests/fixtures/natural-earth
 ├── points-1000.geojson
 └── README.txt
 ```
+
+
+⚠️ Warning: beginner grade, maybe not idiomatic Rust code follows!
 
 Here is an excerpt of one of the unit tests in Rust. Notice the pattern match at
 the end:
@@ -242,15 +247,17 @@ fn natural_earth_test_complex_polygons() {
 ## Rust Implementation
 
 Of interest is the pattern matching, and converting between GeoJson types and
-Geo types. It was a pain point learning how to translate into GeoRust's native
+Geo types. It was a pain point learning how to translate into [GeoRust](https://docs.rs/geojson/latest/geojson/) native
 types in and out of GeoJson. However, the heavy lifting of the function
-`contains()` was already implemented in GeoRust's `geo` crate, so the task was
+`contains()` was already implemented in [GeoRust](https://docs.rs/geojson/latest/geojson/) `geo` crate, so the task was
 mostly translating between types, and enumerating through the
 `FeatureCollection`s.
 
 The complete source code is in Github, please see the [Links](#links) section.
 The section [Next Steps and Optimizations](#next-steps-and-optimizations) lists 
 some outstanding TODO items as well as ideas for optimizing this function.
+
+⚠️ Warning: beginner grade, maybe not idiomatic Rust code follows!
 
 ```rust
 // Excerpt of src/lib.rs
@@ -296,8 +303,10 @@ pub fn points_within_polygons(
 
 ### WASM bindings
 
-Rust's wasm-bindgen and wasm-pack tools were easy to use and just worked.
+Rust's wasm-bindgen and wasm-pack tools were easy to use and they just worked.
 Here is what I came up with to expose the Rust function to JavaScript:
+
+⚠️ Warning: beginner grade, maybe not idiomatic Rust code follows!
 
 ```rust
 // Excerpt of wasm/src/lib.rs
@@ -315,6 +324,7 @@ pub fn points_within_polygons(points: JsValue, polygons: JsValue) -> JsValue {
     }
 }
 ```
+
 <div id="benchmarks"></div>
 
 ## Benchmark Results
@@ -335,17 +345,17 @@ Two interesting observations:
    more points it's tasked with. Notice the Y-Axis is Log Scale, and the red and
    blue lines are diverging, not parallel, as the number of points increases.
 
-3. Turf.js was faster for one out of the six benchmarkes: 10 points and Complex
+3. Turf.js was faster for one out of the six benchmarks: 10 points and Complex
    polygons. I have a theory (untested) that is because of the cost of
    serializing the GeoJson to send it to the WASM module. WASM only knows about
    numbers and byte arrays. Everything else has to be serialized. In fact, for
-   each function call, there are 6 geojson serialization steps!
+   each function call, there are 6 geojson serialization/de-serialization steps!
 
-## Serialize All The Things (tm)
+## Serialize All The Things
 
 ![Flowchart](./serialize-all-the-things.png)
 
-As suggested above in the discussion, some use cases might not see any
+As suggested above in the discussion some use cases might not see any
 performance gains with WASM if the cost of serialization is greater than the
 benefits gained by doing the computation in WASM.
 
@@ -356,6 +366,60 @@ type safety and other benefits.
 ## Next Steps and Future Optimizations
 
 <div id="next-steps-and-optimizations"></div>
+
+### Bounding Box checking
+
+GeoJson Features have an optional `bbox` property. The Turf.js function checks
+for that and does an early-out optimization if a point is not within the bbox of
+a polygon. In my Rust implementation I did not do that. This does not effect the
+benchmarks shown above because the reference polygon dataset does not include
+bounding boxes. Checking for the bounding rectangle in the Rust
+`points_within_polygons()` seems to be a necessary next step to make it a
+drop-in replacement for the Turf.js function.
+
+### API Design
+
+My Rust function "asks for more ownership than it needs". That terminology came
+from Matt Brubeck (@mbrubeck) on the [Rust Users Forum](https://users.rust-lang.org).
+That is, it takes ownership of the `points` and `polygons` parameters. This is
+in large part because of some of the 3rd party functions I used, e.g. the
+`geo_geojson` crate also ask to take ownership. This bubbled up to my function
+signature. This seems to be a common thing in Rust, and it seems like it
+violates the dependency inversion principle (abstractions should not depend on
+details). In any case, I want to rewrite my function so it's signature takes
+just references. There may need to be lifetime annotations added as well...
+
+  ```rust
+  // Improved fn signature?
+  pub fn points_within_polygons(
+    points: &FeatureCollection,
+    polygons: &FeatureCollection,
+  ) -> Option<FeatureCollection>
+  ```
+
+### Add a [R-Tree](https://en.wikipedia.org/wiki/R-tree) Spatial Index
+
+In practice, just discovering which points are contained might not actually be
+that useful. Typically in a GIS workflow one will want to *aggregate* the points
+into buckets aka bins. This is commonly seen as a [Choropleth
+Map](https://doc.arcgis.com/en/insights/create/choropleth-maps.htm).
+
+Stuart Lynn (@stuartlynn) co-incidentally [is working on a similar project
+using Rust and WASM](https://github.com/stuartlynn/wasm_geo_agg). It takes
+points as CSV and aggregates them into GeoJson polygons. It has a nice UI
+visualization, and he used the [rstar](https://crates.io/crates/rstar) crate for
+an r*-tree spatial index.
+
+I hope to learn from @stuartlynn's code and see if the `rstar` create can be
+used in my function and then see how it effects the benchmarks.
+
+## Thanks
+
+One of Rust's strengths is it's
+[Community](https://www.rust-lang.org/community). I have felt welcomed on the
+Users Forum, GitHub and Discord chat. The developer experience is a big part of
+what defines Rust. Cheers to the [GeoRust](https://github.com/georust)
+developers, and the individuals I mentioned above.
 
 ## Links
 
@@ -372,6 +436,8 @@ https://github.com/georust
 https://rustwasm.github.io/wasm-pack/
 
 https://rustwasm.github.io/docs/book/
+
+https://github.com/stuartlynn/wasm_geo_agg
 
 http://www.naturalearthdata.com/
 
