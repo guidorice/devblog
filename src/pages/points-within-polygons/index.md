@@ -19,7 +19,7 @@ Cartography and Visualization. I was creating a map of all the lightning strikes
 in New Mexico over a 12 year period, aggregated into hex-bins. That's about 10
 million points and a thousand hex-bins. Using [ESRI
 ArcMap](https://desktop.arcgis.com/en/arcmap/), the spatial join took ~45
-minutes on desktop workstation. I thought "Wow! Why is that so slow?" My
+minutes on a desktop workstation. I thought "Wow! Why is that so slow?" My
 deliverable for that capstone project is a [PDF map, which you can download
 here](./Rice_A_Capstone.pdf).
 
@@ -210,20 +210,16 @@ fn natural_earth_test_complex_polygons() {
         .expect(READ_FILE_FAIL_MSG);
     let points_geojson = points_data.parse::<GeoJson>().unwrap();
     let points_fc = common::feature_collection(points_geojson);
-
     let polygons_data = fs::read_to_string([FIXTURES_PATH, "ne_10m_land.geojson"].concat())
         .expect(READ_FILE_FAIL_MSG);
     let polygons_geojson = polygons_data.parse::<GeoJson>().unwrap();
     let polygons_fc = common::feature_collection(polygons_geojson);
-
     let expect_pretty_printed =
         fs::read_to_string([FIXTURES_PATH, "ne_10m_land_points10_result.geojson"].concat())
             .expect(READ_FILE_FAIL_MSG);
     let expect_geojson = expect_pretty_printed.parse::<GeoJson>().unwrap();
     let expect_str = expect_geojson.to_string();
-
     let maybe_result_fc = points_within_polygons(points_fc, polygons_fc);
-
     match maybe_result_fc {
         Some(feature_collection) => {
             // features may be returned in different order, so assert on the
@@ -279,7 +275,6 @@ pub fn points_within_polygons(
       },
     })
     .collect();
-
   if contained_point_features.is_empty() {
     None
   } else {
@@ -328,13 +323,10 @@ const suite = new benchmark.Suite;
 const pointsFeatureCollection_10 = JSON.parse(readFileSync('./fixtures/natural-earth/points-10.geojson').toString());
 const pointsFeatureCollection_100 = JSON.parse(readFileSync('./fixtures/natural-earth/points-100.geojson').toString());
 const pointsFeatureCollection_1000 = JSON.parse(readFileSync('./fixtures/natural-earth/points-1000.geojson').toString());
-
 const simplePolygonsFeatureCollection = JSON.parse(readFileSync('./fixtures/natural-earth/ne_110m_land.geojson').toString());
 const complexPolygonsFeatureCollection = JSON.parse(readFileSync('./fixtures/natural-earth/ne_10m_land.geojson').toString());
-
 const turfMsg = 'turf.js/pointsWithinPolygon on';
 const wasmMsg = 'rust-wasm pointsWithinPolgons on';
-
 suite
     .add(`${turfMsg} simple polygons x 10 points`, () => {
         pointsWithinPolygon(pointsFeatureCollection_10, simplePolygonsFeatureCollection);
