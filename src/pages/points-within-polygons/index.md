@@ -72,13 +72,7 @@ microservices, databases, network servers, embedded devices, distributed
 systems, and surprisingly, web app development too because of its suitability
 to target [WebAssembly](https://webassembly.org/) (WASM).
 
-In the late 90's I attempted to learn C / C++ but never got very far with it,
-because I did not have the determination and patience. Simply put, once I
-experienced crashing and memory corruption I sought out safer
-alternatives like Java, C#, and Python.
-
-But today Rust *claims* to offer something pretty appealing: Performance,
-Reliability and Productivity. Its borrow checking compiler and lifetimes
+Rust's borrow checking compiler and lifetimes
 annotation syntax is new and innovative. It also takes ideas from other modern
 languages, such as OCaml, F#, and Haskell (the ML language family) as well as
 C++.
